@@ -6,11 +6,12 @@ import 'screens/home.dart';
 
 class homePage extends StatefulWidget {
   static const String id = 'homePage';
+
   @override
-  _homePageState createState() => _homePageState();
+  homePageState createState() => homePageState();
 }
 
-class _homePageState extends State<homePage> {
+class homePageState extends State<homePage> {
   final _auth = FirebaseAuth.instance;
   FirebaseUser loggedInUser;
 
@@ -23,7 +24,7 @@ class _homePageState extends State<homePage> {
   int currentIndex = 0;
   int cIndex = 0;
 
-  void _incrementTab(index) {
+  void incrementTab(index) {
     setState(() {
       currentIndex = index;
       cIndex = index;
@@ -57,7 +58,7 @@ class _homePageState extends State<homePage> {
               title: new Text('TASKS')),
         ],
         onTap: (index) {
-          _incrementTab(index);
+          incrementTab(index);
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

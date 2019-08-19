@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
 
 class home extends StatefulWidget {
   static const String id = 'home';
@@ -9,15 +11,14 @@ class home extends StatefulWidget {
 }
 
 class _homeState extends State<home> {
-  Future _data;
+  String userUid;
   FirebaseUser loggedInUser;
   final _fireStore = Firestore.instance;
-  String userUid;
 
   final _auth = FirebaseAuth.instance;
   List<Container> messageWidgets = [];
 
-  void getCurrentUser() async {
+  Future getCurrentUser() async {
     final user = await _auth.currentUser();
     if (user != null) {
       loggedInUser = user;
@@ -25,82 +26,65 @@ class _homeState extends State<home> {
     }
   }
 
-  Future getTasks() async {
-    QuerySnapshot qn = await _fireStore
+  getTasks() {
+    return _fireStore
         .document('Userss')
         .collection('$userUid/Tasks')
         .getDocuments();
-    return qn.documents;
   }
+
+  bool boool = false;
+  var tasks;
 
   @override
   void initState() {
-    super.initState();
-    getCurrentUser();
-    build(context);
-  }
+    getCurrentUser().whenComplete(() {
+      getTasks().then((QuerySnapshot docs) {
+        if (docs.documents.isNotEmpty) {
+          setState(() {
+            boool = true;
+            tasks = docs.documents[1].data;
+            for (var taskName in docs.documents) {
+              final taskLabel = taskName.data['Task'];
+              final taskCategory = taskName.data['Category'];
 
-  Container bbuild() {
-    StreamBuilder<QuerySnapshot>(
-        stream: _fireStore
-            .document('Userss')
-            .collection('$userUid/Tasks')
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final messages = snapshot.data.documents;
-            for (var message in messages) {
-              final messageText = message.data['Task'];
-              final messageCategory = message.data['Category'];
-
-              //TODO
-              final messageWidget = Container(
+              final messageWidget = new Container(
                 color: Colors.black12,
-                child: Text(messageText),
+                child: Column(
+                  children: <Widget>[
+                    Text(taskLabel),
+                    Text(taskCategory),
+                  ],
+                ),
               );
               messageWidgets.add(messageWidget);
             }
-            return SingleChildScrollView(
-              child: Column(
-                children: messageWidgets,
-              ),
-            );
-          } else {
-            return Column(
-              children: <Widget>[Text('NO DATA')],
-            );
-          }
-        });
+          });
+        }
+      });
+    });
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: new StreamBuilder<QuerySnapshot>(
-            stream: Firestore.instance
-                .document('Userss')
-                .collection('$userUid/Tasks')
-                .snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (!snapshot.hasData) return new Text('Loading...');
-              return new ListView(
-                  children:
-                      snapshot.data.documents.map((DocumentSnapshot document) {
-                return new ListTile(
-                  title: new Text('hi'),
-                  subtitle: new Text(document['Task']),
-                );
-              }).toList());
-            }),
-      ),
-    );
+    return SafeArea(
+        child: Center(
+            child: Column(
+      children: <Widget>[
+        boool
+            ? Column(
+                children: messageWidgets,
+              )
+            : Container(
+                child: Text('Data yoxdur'),
+              ),
+      ],
+    )));
   }
 }
+
 /*
-
-
 
 * Column(
           crossAxisAlignment: CrossAxisAlignment.center,

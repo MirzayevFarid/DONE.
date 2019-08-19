@@ -6,8 +6,12 @@ import 'package:done/homePage.dart';
 import 'screens/splashScreen.dart';
 import 'screens/newTask.dart';
 import 'screens/home.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  Firestore.instance.settings(timestampsInSnapshotsEnabled: true);
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

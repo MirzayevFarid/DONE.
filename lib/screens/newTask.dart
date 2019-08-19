@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:done/components/newCategory.dart';
+import 'package:done/homePage.dart';
 
 class newTask extends StatefulWidget {
   @override
@@ -35,10 +37,8 @@ class _newTaskState extends State<newTask> {
 
   @override
   Widget build(BuildContext context) {
-    String task;
-    String category;
-    String user;
-
+    String task = '';
+    String category = 'Other';
     return Column(
       children: <Widget>[
         Column(
@@ -55,7 +55,7 @@ class _newTaskState extends State<newTask> {
                     SizedBox(height: 80),
                     Icon(
                       Icons.add,
-                      color: Colors.white,
+                      color: Colors.blue,
                       size: 50,
                     ),
                     SizedBox(height: 20),
@@ -90,126 +90,21 @@ class _newTaskState extends State<newTask> {
                         child: ListView(
                           scrollDirection: Axis.horizontal,
                           children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  category = 'Personal';
-                                },
-                                child: Row(
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.fiber_manual_record,
-                                      color: Colors.yellow,
-                                      size: 17,
-                                    ),
-                                    Text(
-                                      'Personal',
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        color: Colors.black45,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  category = 'work';
-                                },
-                                child: Row(
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.fiber_manual_record,
-                                      color: Colors.green,
-                                      size: 17,
-                                    ),
-                                    Text(
-                                      'Work',
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        color: Colors.black45,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  category = 'meeting';
-                                },
-                                child: Row(
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.fiber_manual_record,
-                                      color: Colors.purple,
-                                      size: 17,
-                                    ),
-                                    Text(
-                                      'Meeting',
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        color: Colors.black45,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  category = 'study';
-                                },
-                                child: Row(
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.fiber_manual_record,
-                                      color: Colors.blue,
-                                      size: 17,
-                                    ),
-                                    Text(
-                                      'Study',
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        color: Colors.black45,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  category = 'shopping';
-                                },
-                                child: Row(
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.fiber_manual_record,
-                                      color: Colors.orange,
-                                      size: 17,
-                                    ),
-                                    Text(
-                                      'Shopping',
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        color: Colors.black45,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                            newCategory('Work', Colors.green, () {
+                              category = 'work';
+                            }),
+                            newCategory('Meeting', Colors.purple, () {
+                              category = 'meeting';
+                            }),
+                            newCategory('Study', Colors.blue, () {
+                              category = 'study';
+                            }),
+                            newCategory('Shopping', Colors.orange, () {
+                              category = 'shopping';
+                            }),
+                            newCategory('Other', Colors.grey, () {
+                              category = 'other';
+                            }),
                           ],
                         ),
                       ),
@@ -223,6 +118,10 @@ class _newTaskState extends State<newTask> {
                           'Task': task,
                         });
                         print('added');
+                        final snackBar =
+                            SnackBar(content: Text("Task Added Succesfully"));
+
+                        Scaffold.of(context).showSnackBar(snackBar);
                       },
                       child: Image.asset('images/addTaskButton.png'),
                     )

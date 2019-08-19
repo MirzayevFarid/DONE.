@@ -10,6 +10,7 @@ class inputField extends StatelessWidget {
 
   inputField(this.textInputAction, this.keyboardType, this.hint, this.obscure,
       this.onChanged);
+
   @override
   Widget build(BuildContext context) {
     return TextField(
