@@ -7,6 +7,7 @@ import 'screens/splashScreen.dart';
 import 'screens/newTask.dart';
 import 'screens/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
   Firestore.instance.settings(timestampsInSnapshotsEnabled: true);

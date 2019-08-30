@@ -2,7 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:io';
+import 'package:done/components/taskCard.dart';
+import 'package:easy_listview/easy_listview.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class home extends StatefulWidget {
   static const String id = 'home';
@@ -11,7 +13,9 @@ class home extends StatefulWidget {
 }
 
 class _homeState extends State<home> {
+  bool _loading = false;
   String userUid;
+
   FirebaseUser loggedInUser;
   final _fireStore = Firestore.instance;
 
@@ -33,32 +37,36 @@ class _homeState extends State<home> {
         .getDocuments();
   }
 
-  bool boool = false;
+  bool isDataLoaded = false;
   var tasks;
 
   @override
   void initState() {
+//    _loading = true;
     getCurrentUser().whenComplete(() {
       getTasks().then((QuerySnapshot docs) {
         if (docs.documents.isNotEmpty) {
           setState(() {
-            boool = true;
-            tasks = docs.documents[1].data;
+            isDataLoaded = true;
             for (var taskName in docs.documents) {
               final taskLabel = taskName.data['Task'];
               final taskCategory = taskName.data['Category'];
-
+              final color = taskName.data['Color'];
               final messageWidget = new Container(
-                color: Colors.black12,
-                child: Column(
-                  children: <Widget>[
-                    Text(taskLabel),
-                    Text(taskCategory),
-                  ],
-                ),
+                child: taskCard(taskLabel, taskCategory, color),
               );
               messageWidgets.add(messageWidget);
             }
+          });
+        }
+        if (isDataLoaded == true) {
+          setState(() {
+            _loading = false;
+          });
+        }
+        if (messageWidgets.length == 0) {
+          setState(() {
+            _loading = false;
           });
         }
       });
@@ -68,61 +76,69 @@ class _homeState extends State<home> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Center(
-            child: Column(
-      children: <Widget>[
-        boool
-            ? Column(
-                children: messageWidgets,
-              )
-            : Container(
-                child: Text('Data yoxdur'),
+    return ModalProgressHUD(
+      inAsyncCall: _loading,
+      child: Column(
+        children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                child: Image.asset('images/topBarBackground.png',
+                    width: double.infinity, fit: BoxFit.fill),
               ),
-      ],
-    )));
+              Container(
+                child: isDataLoaded
+                    ? Container(
+                        // TODO : Solve Height Problem
+                        height: MediaQuery.of(context).size.height - 220,
+                        child: EasyListView(
+                            itemCount: messageWidgets.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                child: Column(
+                                  children: <Widget>[messageWidgets[index]],
+                                ),
+                              );
+                            }))
+                    : Container(
+                        child: Column(
+                          children: <Widget>[
+                            SizedBox(height: 150),
+                            Image.asset(
+                              'images/noTaskIcon.png',
+                              height: 180,
+                            ),
+                            SizedBox(height: 70),
+                            Text(
+                              'HOME   No tasks',
+                              style: TextStyle(
+                                  color: Color(0xFF554E8F),
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 11),
+                            Text(
+                              'You have no task to do',
+                              style: TextStyle(
+                                  color: Color(0xFF82A0B7), fontSize: 23),
+                            ),
+                          ],
+                        ),
+                      ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
 
-/*
-
-* Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              child: Image.asset('images/topBarBackground.png',
-                  width: double.infinity, fit: BoxFit.fill),
-            ),
-            Container(
-              child: Column(
-                children: <Widget>[
-                  SizedBox(height: 150),
-                  Image.asset(
-                    'images/noTaskIcon.png',
-                    height: 180,
-                  ),
-                  SizedBox(height: 70),
-                  Text(
-                    'HOME   No tasks',
-                    style: TextStyle(
-                        color: Color(0xFF554E8F),
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 11),
-                  Text(
-                    'You have no task to do',
-                    style: TextStyle(color: Color(0xFF82A0B7), fontSize: 23),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
- */
-
 /**
+ *
+ *
  * StreamBuilder<QuerySnapshot>(
     stream: _fireStore
     .document('Userss')

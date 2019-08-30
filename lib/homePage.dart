@@ -63,6 +63,7 @@ class homePageState extends State<homePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: new FloatingActionButton(
+          shape: StadiumBorder(),
           child: Icon(
             Icons.add,
             color: Colors.white,

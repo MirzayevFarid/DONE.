@@ -94,7 +94,7 @@ class _loginState extends State<login> {
                         Navigator.pushNamed(context, splashScreen.id);
                       }
                       setState(() {
-                        _saving = true;
+                        _saving = false;
                       });
                     } catch (e) {
                       print(e);
