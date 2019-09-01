@@ -90,6 +90,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_local_notifications:
+    dependency: "direct main"
+    description:
+      name: flutter_local_notifications
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.8.2"
   flutter_slidable:
     dependency: "direct main"
     description:
@@ -116,13 +123,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.15.8"
-  marquee:
+  marquee_widget:
     dependency: "direct main"
     description:
-      name: marquee
+      name: marquee_widget
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "0.7.7"
   matcher:
     dependency: transitive
     description:
@@ -158,6 +165,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.0"
+  platform:
+    dependency: transitive
+    description:
+      name: platform
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.1"
   quiver:
     dependency: transitive
     description:

@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:done/screens/home.dart';
-import 'package:marquee/marquee.dart';
+//import 'package:marquee/marquee.dart';
+import 'package:marquee_widget/marquee_widget.dart';
 
 class taskCard extends StatelessWidget {
   String task;
@@ -48,7 +49,7 @@ class taskCard extends StatelessWidget {
 //              activeColor: Colors.grey,
               value: status,
               onChanged: (bool val) {
-                _updateData(val, id);
+                _updateStatus(val, id);
               },
             ),
             SizedBox(
@@ -58,10 +59,16 @@ class taskCard extends StatelessWidget {
             SizedBox(
               width: 20,
             ),
-            Expanded(
-              child: Marquee(
-//                scrollAxis: Axis.horizontal,
-                text: 'Some sample text that takes some space.',
+            Flexible(
+              child: Container(
+                width: 190,
+                child: Marquee(
+                  textDirection: TextDirection.ltr,
+                  child: Text(
+                    task,
+                    style: TextStyle(),
+                  ),
+                ),
               ),
             ),
             SizedBox(
@@ -79,7 +86,7 @@ class taskCard extends StatelessWidget {
 }
 
 final db = Firestore.instance;
-_updateData(bool status, String id) async {
+_updateStatus(bool status, String id) async {
   await db
       .document('Userss')
       .collection('$userUid/Tasks')

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:done/components/TASK.dart';
 import 'package:done/screens/home.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class newTask extends StatefulWidget {
   @override
@@ -16,6 +19,7 @@ class newTask extends StatefulWidget {
 class _newTaskState extends State<newTask> {
   TextEditingController controller;
   FocusNode focusNode;
+  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   @override
   void initState() {
@@ -23,13 +27,23 @@ class _newTaskState extends State<newTask> {
     focusNode = FocusNode();
     controller = TextEditingController();
     getCurrentUser();
+    //TODO begin
+    final settingsAndroid = AndroidInitializationSettings('app_icon');
+    final settingsIOS = IOSInitializationSettings(
+        onDidReceiveLocalNotification: (id, title, body, payload) =>
+            onSelectNotification(payload));
+    flutterLocalNotificationsPlugin.initialize(
+        InitializationSettings(settingsAndroid, settingsIOS),
+        onSelectNotification: onSelectNotification);
+    //TODO end
   }
 
   FirebaseUser loggedInUser;
   final _fireStore = Firestore.instance;
   final _auth = FirebaseAuth.instance;
-
   String userUid;
+  TASK newTask;
+
   void getCurrentUser() async {
     final user = await _auth.currentUser();
     if (user != null) {
@@ -40,7 +54,7 @@ class _newTaskState extends State<newTask> {
 
   @override
   Widget build(BuildContext context) {
-    String task = '';
+    String task = ' ';
     String category = 'Other';
     Color color = Colors.grey;
     return SingleChildScrollView(
@@ -142,9 +156,29 @@ class _newTaskState extends State<newTask> {
                   FlatButton(
                     onPressed: () {
                       print('clicked');
-                      TASK newTask =
+                      newTask =
                           new TASK(task, category, color, false, pickedTime);
-                      taskRef.add(newTask.toJson());
+
+                      var id = taskRef.document().documentID;
+                      taskRef
+                          .document(id)
+                          .setData(newTask.toJson())
+                          .then((val) {
+                        print("document Id ----------------------: $id");
+                      }).whenComplete(() {
+                        _scheduleNotification(pickedTime, task, category, id);
+                      });
+
+//                      taskRef.add(newTask.toJson()).whenComplete(
+//                        () {
+//                          print(
+//                              '=================================================');
+//                          print(newTask.getTaskId());
+//                          print(
+//                              '=================================================');
+//                          _scheduleNotification(pickedTime, task, category);
+//                        },
+//                      );
 
                       print('added');
                       final snackBar =
@@ -162,6 +196,44 @@ class _newTaskState extends State<newTask> {
       ),
     );
   }
+
+  //TODO begin
+  Future onSelectNotification(String payload) async =>
+      await Navigator.pushNamed(context, home.id);
+
+  Future _scheduleNotification(
+      pickedTime, String task, String category, id) async {
+    print('id:::::::::::::::::::::::::::::::::::::::::::::::::::$id');
+    var scheduledNotificationDateTime = pickedTime;
+//    DateTime.now().add(Duration(seconds: 5));
+    var vibrationPattern = Int64List(4);
+    vibrationPattern[0] = 0;
+    vibrationPattern[1] = 1000;
+    vibrationPattern[2] = 5000;
+    vibrationPattern[3] = 2000;
+
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'your other channel id',
+        'your other channel name',
+        'your other channel description',
+        icon: 'secondary_icon',
+        sound: 'slow_spring_board',
+        largeIcon: 'sample_large_icon',
+        largeIconBitmapSource: BitmapSource.Drawable,
+        vibrationPattern: vibrationPattern,
+        enableLights: true,
+        color: const Color.fromARGB(255, 255, 0, 0),
+        ledColor: const Color.fromARGB(255, 255, 0, 0),
+        ledOnMs: 1000,
+        ledOffMs: 500);
+    var iOSPlatformChannelSpecifics =
+        IOSNotificationDetails(sound: "slow_spring_board.aiff");
+    var platformChannelSpecifics = NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.schedule(id.toString(), category,
+        task, scheduledNotificationDateTime, platformChannelSpecifics);
+  }
+//TODO end
 }
 
 var pickedTime;
