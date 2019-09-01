@@ -1,11 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:done/screens/home.dart';
+import 'package:marquee/marquee.dart';
 
 class taskCard extends StatelessWidget {
   String task;
   String category;
   int color;
-  bool checked = true;
-  taskCard(this.task, this.category, this.color);
+  bool status;
+  final date;
+  String id;
+  taskCard(
+      this.id, this.task, this.category, this.color, this.date, this.status);
 
   @override
   Widget build(BuildContext context) {
@@ -36,22 +42,47 @@ class taskCard extends StatelessWidget {
               width: 10,
             ),
             SizedBox(
-              width: 20,
+              width: 5,
             ),
             Checkbox(
-              //TODO: ADD VALUE TO FIRESTORE
 //              activeColor: Colors.grey,
-              value: checked,
-              onChanged: (bool val) {},
+              value: status,
+              onChanged: (bool val) {
+                _updateData(val, id);
+              },
             ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(date),
             SizedBox(
               width: 20,
             ),
-            Text('07:00 AM '),
-            Text(task),
+            Expanded(
+              child: Marquee(
+//                scrollAxis: Axis.horizontal,
+                text: 'Some sample text that takes some space.',
+              ),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Icon(
+              Icons.add_alert,
+              size: 20,
+            )
           ],
         ),
       ),
     );
   }
+}
+
+final db = Firestore.instance;
+_updateData(bool status, String id) async {
+  await db
+      .document('Userss')
+      .collection('$userUid/Tasks')
+      .document(id)
+      .updateData({'Status': status});
 }

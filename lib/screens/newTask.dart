@@ -5,6 +5,8 @@ import 'package:done/components/newCategory.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:done/components/TASK.dart';
+import 'package:done/screens/home.dart';
 
 class newTask extends StatefulWidget {
   @override
@@ -140,13 +142,10 @@ class _newTaskState extends State<newTask> {
                   FlatButton(
                     onPressed: () {
                       print('clicked');
-                      _fireStore.document('Userss');
-                      _fireStore.collection('Userss/$userUid/Tasks').add({
-                        'Category': category,
-                        'Task': task,
-                        'Color': color.value,
-                        'SelectedTime': pickedTime,
-                      });
+                      TASK newTask =
+                          new TASK(task, category, color, false, pickedTime);
+                      taskRef.add(newTask.toJson());
+
                       print('added');
                       final snackBar =
                           SnackBar(content: Text("Task Added Succesfully"));
@@ -190,7 +189,7 @@ class BasicDateTimeField extends StatelessWidget {
               initialTime:
                   TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
             );
-            pickedTime = date;
+            pickedTime = DateTimeField.combine(date, time);
             return DateTimeField.combine(date, time);
           } else {
             return currentValue;

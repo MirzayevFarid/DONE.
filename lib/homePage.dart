@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'screens/newTask.dart';
-import 'screens/tasks.dart';
 import 'screens/home.dart';
+import 'package:done/screens/tasks.dart';
 
 class homePage extends StatefulWidget {
   static const String id = 'homePage';
