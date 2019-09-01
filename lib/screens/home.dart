@@ -88,7 +88,7 @@ class MessagesStream extends StatelessWidget {
           final category = message.data['Category'];
           final color = message.data['Color'];
           final selectedTime = message.data['SelectedTime'];
-          final taskHour = DateFormat("H:m").format(selectedTime.toDate());
+          final taskHour = DateFormat("HH:mm").format(selectedTime.toDate());
           final taskStatus = message.data['Status'];
 
           final newTaskCard = taskCard(

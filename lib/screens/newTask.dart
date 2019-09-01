@@ -156,17 +156,26 @@ class _newTaskState extends State<newTask> {
                   FlatButton(
                     onPressed: () {
                       print('clicked');
-                      newTask =
-                          new TASK(task, category, color, false, pickedTime);
-
                       var id = taskRef.document().documentID;
+                      List<int> nums = id.codeUnits;
+                      String str = '';
+                      for (int i = 0; i <= 3; i++) {
+                        str = str + nums[i].toString();
+                      }
+                      int replaced = int.parse(str);
+                      print(
+                          '===========================$replaced========================================');
+                      newTask = new TASK(
+                          replaced, task, category, color, false, pickedTime);
+
                       taskRef
                           .document(id)
                           .setData(newTask.toJson())
                           .then((val) {
                         print("document Id ----------------------: $id");
                       }).whenComplete(() {
-                        _scheduleNotification(pickedTime, task, category, id);
+                        _scheduleNotification(
+                            pickedTime, task, category, replaced);
                       });
 
 //                      taskRef.add(newTask.toJson()).whenComplete(
@@ -202,7 +211,7 @@ class _newTaskState extends State<newTask> {
       await Navigator.pushNamed(context, home.id);
 
   Future _scheduleNotification(
-      pickedTime, String task, String category, id) async {
+      pickedTime, String task, String category, int id) async {
     print('id:::::::::::::::::::::::::::::::::::::::::::::::::::$id');
     var scheduledNotificationDateTime = pickedTime;
 //    DateTime.now().add(Duration(seconds: 5));
@@ -230,8 +239,8 @@ class _newTaskState extends State<newTask> {
         IOSNotificationDetails(sound: "slow_spring_board.aiff");
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.schedule(id.toString(), category,
-        task, scheduledNotificationDateTime, platformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.schedule(id, category, task,
+        scheduledNotificationDateTime, platformChannelSpecifics);
   }
 //TODO end
 }

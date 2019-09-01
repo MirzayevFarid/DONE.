@@ -11,6 +11,8 @@ class TASK {
     return taskId;
   }
 
+  final int alarmId;
+
   /// Whether it's done.
   final bool status;
 
@@ -21,6 +23,7 @@ class TASK {
   final pickedTime;
 
   TASK(
+    this.alarmId,
     this.task,
     this.category,
     this.color,
@@ -29,6 +32,7 @@ class TASK {
   );
 
   Map<String, dynamic> toJson() => {
+        'AlarmId': alarmId,
         'Category': category,
         'Task': task,
         'Color': color.value,
