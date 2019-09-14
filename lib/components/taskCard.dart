@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:done/screens/home.dart';
 //import 'package:marquee/marquee.dart';
 import 'package:marquee_widget/marquee_widget.dart';
+import 'package:done/screens/newTask.dart';
 
 class taskCard extends StatelessWidget {
   String task;
@@ -11,8 +12,9 @@ class taskCard extends StatelessWidget {
   bool status;
   final date;
   String id;
-  taskCard(
-      this.id, this.task, this.category, this.color, this.date, this.status);
+  int alarmId;
+  taskCard(this.alarmId, this.id, this.task, this.category, this.color,
+      this.date, this.status);
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +50,11 @@ class taskCard extends StatelessWidget {
             Checkbox(
 //              activeColor: Colors.grey,
               value: status,
-              onChanged: (bool val) {
+              onChanged: (bool val) async {
                 _updateStatus(val, id);
+                if (val == true) {
+                  await newTask.flutterLocalNotificationsPlugin.cancel(alarmId);
+                }
               },
             ),
             SizedBox(

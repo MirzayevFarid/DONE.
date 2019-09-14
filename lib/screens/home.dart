@@ -90,9 +90,9 @@ class MessagesStream extends StatelessWidget {
           final selectedTime = message.data['SelectedTime'];
           final taskHour = DateFormat("HH:mm").format(selectedTime.toDate());
           final taskStatus = message.data['Status'];
-
-          final newTaskCard = taskCard(
-              message.documentID, task, category, color, taskHour, taskStatus);
+          final alarmId = message.data['AlarmId'];
+          final newTaskCard = taskCard(alarmId, message.documentID, task,
+              category, color, taskHour, taskStatus);
           messageBubbles.add(newTaskCard);
         }
         return Expanded(

@@ -12,14 +12,19 @@ import 'package:done/screens/home.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class newTask extends StatefulWidget {
+  static var flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
   @override
-  _newTaskState createState() => _newTaskState();
+  _newTaskState createState() => _newTaskState(flutterLocalNotificationsPlugin);
 }
 
 class _newTaskState extends State<newTask> {
   TextEditingController controller;
   FocusNode focusNode;
-  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+  _newTaskState(this.flutterLocalNotificationsPlugin);
 
   @override
   void initState() {
@@ -225,9 +230,8 @@ class _newTaskState extends State<newTask> {
         'your other channel id',
         'your other channel name',
         'your other channel description',
-        icon: 'secondary_icon',
-        sound: 'slow_spring_board',
-        largeIcon: 'sample_large_icon',
+        icon: 'app_icon',
+        largeIcon: 'app_icon',
         largeIconBitmapSource: BitmapSource.Drawable,
         vibrationPattern: vibrationPattern,
         enableLights: true,
