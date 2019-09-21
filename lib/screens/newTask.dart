@@ -167,7 +167,9 @@ class _newTaskState extends State<newTask> {
                       for (int i = 0; i <= 3; i++) {
                         str = str + nums[i].toString();
                       }
-                      int replaced = int.parse(str);
+                      String smallerString = str.substring(0, 6);
+                      int replaced = int.parse(smallerString);
+
                       print(
                           '===========================$replaced========================================');
                       newTask = new TASK(
@@ -182,18 +184,6 @@ class _newTaskState extends State<newTask> {
                         _scheduleNotification(
                             pickedTime, task, category, replaced);
                       });
-
-//                      taskRef.add(newTask.toJson()).whenComplete(
-//                        () {
-//                          print(
-//                              '=================================================');
-//                          print(newTask.getTaskId());
-//                          print(
-//                              '=================================================');
-//                          _scheduleNotification(pickedTime, task, category);
-//                        },
-//                      );
-
                       print('added');
                       final snackBar =
                           SnackBar(content: Text("Task Added Succesfully"));

@@ -84,21 +84,19 @@ class _loginState extends State<login> {
                 Padding(
                   padding: EdgeInsets.only(top: 30, left: 60, right: 60),
                   child: roundButton('Log In', () async {
-                    setState(() {
-                      _saving = true;
-                    });
                     try {
                       final user = await _auth.signInWithEmailAndPassword(
                           email: email, password: password);
-                      if (user != null) {
-                        Navigator.pushNamed(context, splashScreen.id);
-                      }
+                      Navigator.pushNamed(context, splashScreen.id);
                       setState(() {
                         _saving = false;
                       });
                     } catch (e) {
                       print(e);
                     }
+                    setState(() {
+                      _saving = true;
+                    });
                   }, kBlueColor, 150),
                 ),
               ],

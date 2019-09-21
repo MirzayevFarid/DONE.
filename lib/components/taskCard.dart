@@ -4,6 +4,10 @@ import 'package:done/screens/home.dart';
 //import 'package:marquee/marquee.dart';
 import 'package:marquee_widget/marquee_widget.dart';
 import 'package:done/screens/newTask.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:done/components//LayoutChangeNotification.dart';
+import 'package:done/components//swipe_widget.dart';
+import 'package:done/screens/home.dart';
 
 class taskCard extends StatelessWidget {
   String task;
@@ -18,8 +22,32 @@ class taskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Color(0xFFF9FCFF),
+    return OnSlide(
+      backgroundColor: Color(0xFFFAFAFA),
+      items: <ActionItems>[
+        ActionItems(
+            icon: new IconButton(
+              icon: new Icon(Icons.delete),
+              onPressed: () {},
+              color: Colors.red,
+            ),
+            onPress: () async {
+              taskRef.document(id).delete();
+              await newTask.flutterLocalNotificationsPlugin.cancel(alarmId);
+            },
+            backgroudColor: Colors.transparent),
+        ActionItems(
+            icon: new IconButton(
+              icon: new Icon(Icons.edit),
+              onPressed: () {},
+              color: Colors.blueAccent,
+            ),
+            onPress: () {
+              final snackBar = SnackBar(content: Text("Edit"));
+              Scaffold.of(context).showSnackBar(snackBar);
+            },
+            backgroudColor: Colors.transparent),
+      ],
       child: Container(
         height: 50,
         margin: EdgeInsets.all(20),
@@ -68,6 +96,9 @@ class taskCard extends StatelessWidget {
               child: Container(
                 width: 190,
                 child: Marquee(
+                  animationDuration: Duration(seconds: 1),
+                  backDuration: Duration(milliseconds: 5000),
+                  pauseDuration: Duration(milliseconds: 1500),
                   textDirection: TextDirection.ltr,
                   child: Text(
                     task,

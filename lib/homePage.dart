@@ -8,15 +8,11 @@ import 'package:done/screens/tasks.dart';
 
 class homePage extends StatefulWidget {
   static const String id = 'homePage';
-
   @override
   homePageState createState() => homePageState();
 }
 
 class homePageState extends State<homePage> {
-  final _auth = FirebaseAuth.instance;
-  FirebaseUser loggedInUser;
-
   final _pages = [
     home(),
     tasks(),
@@ -36,7 +32,6 @@ class homePageState extends State<homePage> {
   @override
   void initState() {
     super.initState();
-    getCurrentUser();
   }
 
   @override
@@ -78,12 +73,5 @@ class homePageState extends State<homePage> {
           }),
       body: _pages[cIndex],
     );
-  }
-
-  void getCurrentUser() async {
-    final user = await _auth.currentUser();
-    if (user != null) {
-      loggedInUser = user;
-    }
   }
 }

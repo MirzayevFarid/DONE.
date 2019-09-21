@@ -4,6 +4,8 @@ import 'package:done/screens/login.dart';
 import 'package:done/screens/signUp.dart';
 import 'package:done/components/roundButton.dart';
 import 'package:done/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:done/homePage.dart';
 
 class welcome extends StatefulWidget {
   static const String id = 'welcome';
@@ -13,6 +15,23 @@ class welcome extends StatefulWidget {
 }
 
 class _welcomeState extends State<welcome> with TickerProviderStateMixin {
+  final _auth = FirebaseAuth.instance;
+  var user;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getCurrentUser();
+  }
+
+  void getCurrentUser() async {
+    user = await _auth.currentUser();
+    if (user != null) {
+      Navigator.pushNamed(context, homePage.id);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

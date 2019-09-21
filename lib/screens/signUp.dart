@@ -23,7 +23,7 @@ class _signUpState extends State<signUp> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Log In'),
+          title: Text('Sign Up'),
           backgroundColor: Color(0xFF303030),
         ),
         body: ModalProgressHUD(

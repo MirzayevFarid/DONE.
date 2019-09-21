@@ -7,15 +7,16 @@ import 'package:intl/intl.dart';
 
 class home extends StatefulWidget {
   static const String id = 'home';
+
   @override
   _homeState createState() => _homeState();
 }
 
-bool _loading = false;
 String userUid;
 bool isDataLoaded = false;
 final _fireStore = Firestore.instance;
 final _auth = FirebaseAuth.instance;
+
 final CollectionReference taskRef =
     _fireStore.document('Userss').collection('$userUid/Tasks');
 
@@ -33,32 +34,37 @@ class _homeState extends State<home> {
 
   @override
   void initState() {
-//    _loading = true;
     getCurrentUser();
+    MessagesStream().build(context);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ModalProgressHUD(
-      inAsyncCall: _loading,
-      child: Column(
+    var devHeight = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      body: Stack(
         children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                child: Image.asset('images/topBarBackground.png',
-                    width: double.infinity, fit: BoxFit.fill),
-              ),
-              Container(
-                  height: MediaQuery.of(context).size.height - 250,
-                  child: Column(
-                    children: <Widget>[
-                      MessagesStream(),
-                    ],
-                  )),
-            ],
+          Container(
+            height: devHeight / 2 * 0.3,
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(color: Colors.blueAccent, blurRadius: 10),
+              ],
+              color: Colors.amber,
+              image: DecorationImage(
+                  image: AssetImage('images/topBarBackground.png'),
+                  fit: BoxFit.cover),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: devHeight / 2 * 0.3),
+            child: Column(
+              children: <Widget>[
+                MessagesStream(),
+              ],
+            ),
           )
         ],
       ),
@@ -73,6 +79,7 @@ class MessagesStream extends StatelessWidget {
       stream: _fireStore
           .document('Userss')
           .collection('$userUid/Tasks')
+          .orderBy('SelectedTime', descending: true)
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -95,6 +102,7 @@ class MessagesStream extends StatelessWidget {
               category, color, taskHour, taskStatus);
           messageBubbles.add(newTaskCard);
         }
+
         return Expanded(
           child: messageBubbles.length == 0
               ? noTask()
