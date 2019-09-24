@@ -1,15 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:done/components/taskCard.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class home extends StatefulWidget {
   static const String id = 'home';
 
   @override
-  _homeState createState() => _homeState();
+  homeState createState() => homeState();
 }
 
 String userUid;
@@ -23,7 +22,11 @@ final CollectionReference taskRef =
 FirebaseUser loggedInUser;
 List<Container> messageWidgets = [];
 
-class _homeState extends State<home> {
+class homeState extends State<home> {
+  getUserId() {
+    return userUid;
+  }
+
   void getCurrentUser() async {
     final user = await _auth.currentUser();
     if (user != null) {

@@ -1,50 +1,114 @@
 import 'package:flutter/material.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:done/screens/home.dart';
 class tasks extends StatefulWidget {
   @override
   _tasksState createState() => _tasksState();
 }
 
 class _tasksState extends State<tasks> {
+  final _fireStore = Firestore.instance;
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              child: Image.asset('images/topBarBackground.png',
-                  width: double.infinity, fit: BoxFit.fill),
+    var devWidth = MediaQuery.of(context).size.width;
+    var devHeight = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      body: Stack(
+        children: <Widget>[
+          Container(
+            height: devHeight / 2 * 0.3,
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(color: Colors.blueAccent, blurRadius: 10),
+              ],
+              color: Colors.amber,
+              image: DecorationImage(
+                  image: AssetImage('images/topBarBackground.png'),
+                  fit: BoxFit.cover),
             ),
-            Container(
-              child: Column(
-                children: <Widget>[
-                  SizedBox(height: 150),
-                  Image.asset(
-                    'images/noTaskIcon.png',
-                    height: 180,
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: devHeight / 2 * 0.3),
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: ListView(
+                    reverse: false,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.0,
+                      vertical: 20.0,
+                    ),
+                    children: <Widget>[
+                      Wrap(
+                        children: <Widget>[
+                          Container(
+                            alignment: Alignment.bottomCenter,
+                            height: 200,
+                            width: devWidth / 2 - 30,
+                            margin: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(13),
+                              color: Color(0xFFFFFFFF),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade400,
+                                  blurRadius: 6,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 70),
-                  Text(
-                    'TASKS   No tasks',
-                    style: TextStyle(
-                        color: Color(0xFF554E8F),
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 11),
-                  Text(
-                    'You have no task to do',
-                    style: TextStyle(color: Color(0xFF82A0B7), fontSize: 23),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
+
+
+  //TODO: EDIT HERE TO GET CATEGORIES FROM FIRESTORE
+  void getCategories(){
+    var userUid = homeState().getUserId;
+
+    StreamBuilder<QuerySnapshot>(
+      stream: _fireStore
+          .document('Userss')
+          .collection('$userUid/Tasks')
+          .orderBy('SelectedTime', descending: true)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        final messages = snapshot.data.documents;
+        List<Container> messageBubbles = [];
+        for (var message in messages) {
+          final category = message.data['Category'];
+          final color = message.data['Color'];
+        }
+
+        return Expanded(
+          child: messageBubbles.length == 0
+              ? noTask()
+              : ListView(
+            reverse: false,
+            padding: EdgeInsets.symmetric(
+              horizontal: 10.0,
+              vertical: 20.0,
+            ),
+            children: messageBubbles,
+          ),
+        );
+      },
+    );
 }
