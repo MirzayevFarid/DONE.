@@ -1,10 +1,8 @@
-import 'dart:typed_data';
-
+import 'package:done/screens/Categories.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'screens/newTask.dart';
+
 import 'screens/home.dart';
-import 'package:done/screens/tasks.dart';
+import 'screens/newTask.dart';
 
 class homePage extends StatefulWidget {
   static const String id = 'homePage';
@@ -15,7 +13,7 @@ class homePage extends StatefulWidget {
 class homePageState extends State<homePage> {
   final _pages = [
     home(),
-    tasks(),
+    Categories(),
     newTask(),
   ];
 

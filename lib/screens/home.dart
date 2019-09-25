@@ -19,6 +19,9 @@ final _auth = FirebaseAuth.instance;
 final CollectionReference taskRef =
     _fireStore.document('Userss').collection('$userUid/Tasks');
 
+final CollectionReference categoryRef =
+    _fireStore.document('Userss').collection('$userUid/Categories');
+
 FirebaseUser loggedInUser;
 List<Container> messageWidgets = [];
 

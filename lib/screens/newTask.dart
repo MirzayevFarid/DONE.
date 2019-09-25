@@ -1,15 +1,14 @@
 import 'dart:typed_data';
 
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:done/components/newCategory.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
 import 'package:done/components/TASK.dart';
 import 'package:done/screens/home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:intl/intl.dart';
 
 class newTask extends StatefulWidget {
   static var flutterLocalNotificationsPlugin =
@@ -57,11 +56,11 @@ class _newTaskState extends State<newTask> {
     userUid = loggedInUser.uid;
   }
 
+  String category = 'Other';
+  Color color = Colors.grey;
   @override
   Widget build(BuildContext context) {
     String task = ' ';
-    String category = 'Other';
-    Color color = Colors.grey;
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -93,7 +92,10 @@ class _newTaskState extends State<newTask> {
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: TextField(
                       onChanged: (value) {
-                        task = value;
+                        setState(() {
+                          task = value;
+                          print(task);
+                        });
                       },
                       cursorColor: Colors.black,
                       decoration: InputDecoration(
@@ -108,46 +110,21 @@ class _newTaskState extends State<newTask> {
                   Container(
                     padding: EdgeInsets.only(left: 20, right: 20),
                     child: Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          top: BorderSide(
-                            color: Colors.grey.shade400,
-                            width: 1,
-                          ),
-                          bottom: BorderSide(
-                            color: Colors.grey.shade400,
-                            width: 1,
+                        decoration: BoxDecoration(
+                          border: Border(
+                            top: BorderSide(
+                              color: Colors.grey.shade400,
+                              width: 1,
+                            ),
+                            bottom: BorderSide(
+                              color: Colors.grey.shade400,
+                              width: 1,
+                            ),
                           ),
                         ),
-                      ),
-                      margin: EdgeInsets.only(top: 10, bottom: 20.0),
-                      height: 70.0,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[
-                          newCategory('Work', Colors.green, () {
-                            category = 'work';
-                            color = Colors.green;
-                          }),
-                          newCategory('Meeting', Colors.purple, () {
-                            category = 'meeting';
-                            color = Colors.purple;
-                          }),
-                          newCategory('Study', Colors.blue, () {
-                            category = 'study';
-                            color = Colors.blue;
-                          }),
-                          newCategory('Shopping', Colors.orange, () {
-                            category = 'shopping';
-                            color = Colors.orange;
-                          }),
-                          newCategory('Other', Colors.grey, () {
-                            category = 'other';
-                            color = Colors.grey;
-                          }),
-                        ],
-                      ),
-                    ),
+                        margin: EdgeInsets.only(top: 10, bottom: 20.0),
+                        height: 70.0,
+                        child: getCategories()),
                   ),
 
                   Column(
@@ -235,6 +212,46 @@ class _newTaskState extends State<newTask> {
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.schedule(id, category, task,
         scheduledNotificationDateTime, platformChannelSpecifics);
+  }
+
+  getCategories() {
+    return StreamBuilder(
+      stream: categoryRef.snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return const Text('Loading...');
+        return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: snapshot.data.documents.length,
+            itemBuilder: (context, index) {
+              var color = snapshot.data.documents[index].data['Color'];
+              var text = snapshot.data.documents[index].data['Category'];
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    category = text;
+                    this.color = Color(color);
+                  });
+                },
+                child: Row(
+                  children: <Widget>[
+                    Icon(
+                      Icons.fiber_manual_record,
+                      color: Color(color),
+                      size: 17,
+                    ),
+                    Text(
+                      text,
+                      style: TextStyle(
+                        fontSize: 17,
+                        color: Colors.black45,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            });
+      },
+    );
   }
 //TODO end
 }
