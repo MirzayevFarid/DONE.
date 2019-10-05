@@ -9,9 +9,6 @@ Reminder app for daily usage
 
 [Firebase](https://firebase.google.com)
 
-## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
 ### Prerequisites
 
@@ -32,7 +29,7 @@ You can download zip of app by clicking the link below
 
 [Download Zip](https://github.com/MirzayevFarid/DONE./archive/master.zip)
 
-After download complete,open project in Andorid Studion and run the main on emulator or ont the real phone
+After download complete, open the project in Andorid Studio and run the app on emulator or on the real device
 
 
 ### TODO For Next Update
