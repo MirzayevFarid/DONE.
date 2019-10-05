@@ -1,16 +1,61 @@
-# done
+# DONE.
 
-A new Flutter application.
+Reminder app for daily usage
+
+### Used Technologies
+[Flutter](https://flutter.dev)
+
+[Dart](https://dart.dev)
+
+[Firebase](https://firebase.google.com)
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-A few resources to get you started if this is your first Flutter project:
+### Prerequisites
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+What things you need to install the software and how to install them
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+```
+Android Studio
+XCode(For Ios)
+Flutter
+Dart
+```
+
+### Installing
+
+A step by step series of examples that tell you how to get a development env running
+
+You can download zip of app by clicking the link below
+
+[Download Zip](https://github.com/MirzayevFarid/DONE./archive/master.zip)
+
+After download complete,open project in Andorid Studion and run the main on emulator or ont the real phone
+
+
+### TODO For Next Update
+  * Edit Task Name and Date
+  * Settings Screen
+  * My Profile Screen
+  * Delete Category
+
+### Images from the app
+
+## Home Screen
+![Screen Shot 2019-10-05 at 14 29 51](https://user-images.githubusercontent.com/29518613/66254443-0018d100-e77f-11e9-9e48-ce49312310fd.png)
+
+## Add New Task
+![ezgif com-video-to-gif-3](https://user-images.githubusercontent.com/29518613/66254474-3d7d5e80-e77f-11e9-91a9-a13c34e4882f.gif)
+
+## Delete Task
+![ezgif com-video-to-gif](https://user-images.githubusercontent.com/29518613/66254472-39e9d780-e77f-11e9-873e-0bb1315014f5.gif)
+
+## Edit Category
+![ezgif com-video-to-gif-2](https://user-images.githubusercontent.com/29518613/66254473-3c4c3180-e77f-11e9-9216-612718961b15.gif)
+
+
+
+
+
