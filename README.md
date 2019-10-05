@@ -44,7 +44,9 @@ You can download the zip of app by clicking the link below
   * Settings Screen
   * My Profile Screen
   * Delete Category
-
+  * Dark Mode Support
+  * Google Sign In Feature
+  * Forgot Password Option
 
 # Images from the app
 
