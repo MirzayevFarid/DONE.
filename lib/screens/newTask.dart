@@ -57,10 +57,10 @@ class _newTaskState extends State<newTask> {
   }
 
   String category = 'Other';
+  String taskName = ' ';
   Color color = Colors.grey;
   @override
   Widget build(BuildContext context) {
-    String task = ' ';
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -93,8 +93,7 @@ class _newTaskState extends State<newTask> {
                     child: TextField(
                       onChanged: (value) {
                         setState(() {
-                          task = value;
-                          print(task);
+                          taskName = value;
                         });
                       },
                       cursorColor: Colors.black,
@@ -147,21 +146,15 @@ class _newTaskState extends State<newTask> {
                       String smallerString = str.substring(0, 6);
                       int replaced = int.parse(smallerString);
 
-                      print(
-                          '===========================$replaced========================================');
-                      newTask = new TASK(
-                          replaced, task, category, color, false, pickedTime);
+                      newTask = new TASK(replaced, taskName, category, color, false, pickedTime);
 
                       taskRef
                           .document(id)
                           .setData(newTask.toJson())
-                          .then((val) {
-                        print("document Id ----------------------: $id");
-                      }).whenComplete(() {
+                          .whenComplete(() {
                         _scheduleNotification(
-                            pickedTime, task, category, replaced);
+                            pickedTime, taskName, category, replaced);
                       });
-                      print('added');
                       final snackBar =
                           SnackBar(content: Text("Task Added Succesfully"));
 
@@ -184,7 +177,6 @@ class _newTaskState extends State<newTask> {
 
   Future _scheduleNotification(
       pickedTime, String task, String category, int id) async {
-    print('id:::::::::::::::::::::::::::::::::::::::::::::::::::$id');
     var scheduledNotificationDateTime = pickedTime;
 //    DateTime.now().add(Duration(seconds: 5));
     var vibrationPattern = Int64List(4);

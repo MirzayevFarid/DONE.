@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:done/components/inputField.dart';
+import 'package:done/components/roundButton.dart';
 import 'package:done/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/block_picker.dart';
@@ -13,6 +14,9 @@ final _fireStore = Firestore.instance;
 List<categoryCard> categoryList = [];
 
 class _CategoriesState extends State<Categories> {
+  final CollectionReference categoryRef =
+      _fireStore.document('Userss').collection('$userUid/Categories');
+
   @override
   void initState() {
     super.initState();
@@ -26,19 +30,33 @@ class _CategoriesState extends State<Categories> {
     var categoryName = '';
     return SafeArea(
       child: Scaffold(
-        body: Column(
-          children: <Widget>[
-            categoryStream(devWidth),
-          ],
+        body: Center(
+          child: Column(
+            children: <Widget>[
+              categoryStream(devWidth),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-addCategories(String category, Color color) {
-  final CollectionReference categoryRef =
-      _fireStore.document('Userss').collection('$userUid/Categories');
+final db = Firestore.instance;
+editCategory(String categoryName, int color, String id) async {
+  await db
+      .document('Userss')
+      .collection('$userUid/Categories')
+      .document(id)
+      .updateData(
+    {
+      'Category': categoryName,
+      'Color': color,
+    },
+  );
+}
+
+addCategory(String category, Color color) {
   categoryRef.add(
     {
       'Category': category,
@@ -67,15 +85,15 @@ class categoryStream extends StatelessWidget {
         final messages = snapshot.data.documents;
         List<categoryCard> messageBubbles = [];
 
-        final addNewCategoryCardd = categoryCard(devWidth, Icons.add,
-            Colors.grey.value, 'Add new', 'add new task', true);
+        final addNewCategoryCardd = categoryCard(
+            'Add New', devWidth, Icons.add, Colors.grey.value, 'Add new', true);
         messageBubbles.add(addNewCategoryCardd);
         for (var message in messages) {
           final category = message.data['Category'];
           final color = message.data['Color'];
 
-          final newCategoryCard = categoryCard(devWidth, Icons.check, color,
-              category, '5 tasks remaining', false);
+          final newCategoryCard = categoryCard(message.documentID, devWidth,
+              Icons.check, color, category, false);
           messageBubbles.add(newCategoryCard);
         }
 
@@ -93,67 +111,12 @@ class categoryStream extends StatelessWidget {
   }
 }
 
-class buildAlert extends StatelessWidget {
-  String text;
-  String category;
-  bool isNew;
-  var devWidth;
-  buildAlert(
-    this.text,
-    this.category,
-    this.isNew,
-    this.devWidth,
-  );
-  @override
-  Widget build(BuildContext context) {
-    var currentColor;
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select a color'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: inputField(
-                      TextInputAction.next,
-                      TextInputType.multiline,
-                      'Enter Category',
-                      false, (value) {
-                    category = value;
-                  }),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                BlockPicker(
-                  pickerColor: currentColor,
-                ),
-                MaterialButton(
-                  color: Colors.blueAccent,
-                  child: Text('DONE'),
-                  onPressed: () {
-                    addCategories(category, currentColor.value);
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
 class categoryCard extends StatelessWidget {
-  categoryCard(this.devWidth, this.icon, this.color, this.category,
-      this.subText, this.isNew);
+  categoryCard(
+      this.id, this.devWidth, this.icon, this.color, this.category, this.isNew);
+  String id;
   double devWidth;
   String category;
-  String subText;
   int color;
   IconData icon;
   bool isNew;
@@ -189,15 +152,24 @@ class categoryCard extends StatelessWidget {
                         currentColor = selectedColor;
                       },
                     ),
-                    MaterialButton(
-                      color: Colors.blueAccent,
-                      child: Text('DONE'),
-                      onPressed: () {
-                        if (isNew) {
-                          addCategories(category, currentColor);
-                        }
-                        Navigator.pop(context);
-                      },
+                    SingleChildScrollView(
+                      child: Wrap(
+                        children: <Widget>[
+                          roundButton('Save', () {
+                            if (isNew) {
+                              addCategory(category, currentColor);
+                            } else {
+                              editCategory(category, currentColor.value, id);
+                            }
+                            Navigator.pop(context);
+                          }, Colors.blueAccent,
+                              MediaQuery.of(context).size.width / 2 - 20),
+                          roundButton('Cancel', () {
+                            Navigator.pop(context);
+                          }, Colors.blueAccent,
+                              MediaQuery.of(context).size.width / 2 - 20),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -220,14 +192,6 @@ class categoryCard extends StatelessWidget {
               category,
               style: TextStyle(
                 fontSize: 20,
-              ),
-            ),
-            Text(
-              subText,
-              style: TextStyle(
-                fontWeight: FontWeight.normal,
-                fontSize: 12,
-                color: Colors.grey,
               ),
             ),
           ],

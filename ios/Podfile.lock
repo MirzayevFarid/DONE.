@@ -86,8 +86,6 @@ PODS:
   - Flutter (1.0.0)
   - flutter_local_notifications (0.0.1):
     - Flutter
-  - flutter_picker (0.0.1):
-    - Flutter
   - GoogleAppMeasurement (6.1.0):
     - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
     - GoogleUtilities/MethodSwizzler (~> 6.0)
@@ -148,7 +146,6 @@ DEPENDENCIES:
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `.symlinks/flutter/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
-  - flutter_picker (from `.symlinks/plugins/flutter_picker/ios`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -187,8 +184,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/flutter/ios"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
-  flutter_picker:
-    :path: ".symlinks/plugins/flutter_picker/ios"
 
 SPEC CHECKSUMS:
   BoringSSL-GRPC: db8764df3204ccea016e1c8dd15d9a9ad63ff318
@@ -208,7 +203,6 @@ SPEC CHECKSUMS:
   FirebaseStorage: b7c6d00997bc21d4465453bdcc5cc65513110fed
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_local_notifications: 9e4738ce2471c5af910d961a6b7eadcf57c50186
-  flutter_picker: 8ff0d7440b4e8327fcc9e6b21a39ef9369e697c7
   GoogleAppMeasurement: 47285fa897e5a125df56b9ef8750a1d81e4598a8
   GoogleDataTransport: b0115dbdf1943c998628dca30800ddd263aaa166
   GoogleDataTransportCCTSupport: 3451e7d8ba19093e533362a6d78d6d9014c6a037

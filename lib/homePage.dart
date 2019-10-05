@@ -50,7 +50,7 @@ class homePageState extends State<homePage> {
                 Icons.dashboard,
                 color: cIndex == 1 ? Colors.blue : Colors.grey,
               ),
-              title: new Text('TASKS')),
+              title: new Text('Categories')),
         ],
         onTap: (index) {
           incrementTab(index);

@@ -1,13 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:done/screens/home.dart';
-//import 'package:marquee/marquee.dart';
-import 'package:marquee_widget/marquee_widget.dart';
-import 'package:done/screens/newTask.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:done/components//LayoutChangeNotification.dart';
 import 'package:done/components//swipe_widget.dart';
 import 'package:done/screens/home.dart';
+import 'package:done/screens/newTask.dart';
+import 'package:flutter/material.dart';
+import 'package:marquee_widget/marquee_widget.dart';
 
 class taskCard extends StatelessWidget {
   String task;
