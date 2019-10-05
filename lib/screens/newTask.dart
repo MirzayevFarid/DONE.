@@ -146,7 +146,8 @@ class _newTaskState extends State<newTask> {
                       String smallerString = str.substring(0, 6);
                       int replaced = int.parse(smallerString);
 
-                      newTask = new TASK(replaced, taskName, category, color, false, pickedTime);
+                      newTask = new TASK(replaced, taskName, category, color,
+                          false, pickedTime);
 
                       taskRef
                           .document(id)
