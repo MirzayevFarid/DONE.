@@ -12,14 +12,18 @@ Reminder app for daily usage
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+# What things you need to install the software and how to install them
 
 ```
-Android Studio
+Android Studio or VS Code
 XCode(For Ios)
 Flutter
 Dart
 ```
+
+# You can check the link below for setting up the environment
+[Check This Link](https://flutter.dev/docs/get-started/install)
+
 
 ### Installing
 
@@ -29,7 +33,10 @@ You can download zip of app by clicking the link below
 
 [Download Zip](https://github.com/MirzayevFarid/DONE./archive/master.zip)
 
-After download complete, open the project in Andorid Studio and run the app on emulator or on the real device
+- After download complete, open the project in Andorid Studio.
+- Open 'pubspec.yaml' file under 'Done.' folder
+- Click 'Packages get' command on the top and wait Android Studio to install the required packages
+- After packages installed successfully, run the app on emulator or on the real device and enjoy :)
 
 
 ### TODO For Next Update
